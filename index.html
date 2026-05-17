@@ -1,77 +1,600 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>KingGame官方mc服务器</title>
-    <link rel="shortcut icon" type="image/x-icon" href="https://s3.bmp.ovh/imgs/2023/01/27/c740310b3270282a.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自由王国 | 一座建在颅腔内的城</title>
     <style>
+        :root {
+            --bg: #0a0e14;
+            --surface: #12171f;
+            --surface-light: #1a1f2b;
+            --text: #e0e3e8;
+            --text-muted: #a8b0bd;
+            --accent: #e2a33b;
+            --accent-dim: #8b6918;
+            --border: #1e2632;
+            --code-bg: #0d1117;
+            /* 
+               字体栈说明（全部使用可免费商用字体）：
+               1. 思源宋体 (Noto Serif SC) - SIL Open Font License 1.1
+                  Google Fonts 分发，Adobe 与 Google 联合开发，完全免费商用
+               2. 思源黑体 (Noto Sans SC) - SIL Open Font License 1.1
+                  Google Fonts 分发，完全免费商用
+               3. JetBrains Mono - SIL Open Font License 1.1
+                  JetBrains 开发，专为开发者设计的等宽字体，完全免费商用
+               4. 回退字体均为操作系统预装基础字体，无商用限制
+            */
+            --font-serif: 'Noto Serif SC', 'Source Han Serif SC', 'Songti SC', 'SimSun', 'STSong', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Inter', 'Noto Sans SC', 'Source Han Sans SC', 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+            --font-mono: 'JetBrains Mono', 'Source Code Pro', 'Consolas', 'Courier New', monospace;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            background-image: url();
-            background-attachment: fixed;
-            background-size: 100%;
-            background-color: rgba(17, 9, 33);
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-sans);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        .planet {
-            width: 60%;
-            height: 200px;
-            background-color: rgba(28, 28, 28);
-            margin: 0 auto;
-            margin-top: 100px;
-        }
-
-        audio {
-            position: relative;
-            left: 6%;
-            top: 10%;
-        }
-
-        img {
-            width: 200px;
-            position: relative;
-            top: 128px;
-            left: 64px;
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: var(--font-serif);
+            font-weight: 700;
+            color: #f0f2f5;
+            line-height: 1.3;
+            letter-spacing: 0.02em;
         }
 
         h1 {
-            color: white;
-            width: 600px;
-            position: relative;
-            top: 18px;
-            left: 16px;
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            letter-spacing: 0.04em;
+        }
+        h2 {
+            font-size: clamp(1.6rem, 3vw, 2.4rem);
+            margin-bottom: 0.6em;
+        }
+        h3 {
+            font-size: clamp(1.2rem, 2vw, 1.6rem);
+            margin-bottom: 0.4em;
         }
 
         p {
-            width: 64%;
-            color: cyan;
-            font-size: 18px;
-            position: relative;
-            left: 18%;
-            top: -150px;
+            margin-bottom: 1.2em;
+            color: var(--text);
         }
 
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: border-color 0.2s;
+        }
+        a:hover {
+            border-bottom-color: var(--accent);
+        }
 
+        blockquote {
+            border-left: 3px solid var(--accent);
+            margin: 2rem 0;
+            padding: 1rem 1.5rem;
+            background: var(--surface);
+            font-family: var(--font-serif);
+            font-style: italic;
+            color: #d5d9e0;
+            border-radius: 0 6px 6px 0;
+        }
+        blockquote footer {
+            margin-top: 0.8rem;
+            font-style: normal;
+            font-family: var(--font-sans);
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            padding: 5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+        .section:last-of-type {
+            border-bottom: none;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(10, 14, 20, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+        }
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .nav-brand {
+            font-family: var(--font-serif);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--accent);
+            letter-spacing: 0.06em;
+            text-decoration: none;
+            border-bottom: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.8rem;
+            list-style: none;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border-bottom: none;
+            transition: color 0.2s;
+            letter-spacing: 0.03em;
+        }
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .hero {
+            padding: 6rem 0 4rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .hero h1 {
+            margin-bottom: 0.4em;
+        }
+        .hero .subtitle {
+            font-family: var(--font-serif);
+            font-size: 1.3rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.06em;
+        }
+        .hero .epigraph {
+            font-family: var(--font-serif);
+            font-style: italic;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            font-size: 0.95rem;
+        }
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.7rem 1.8rem;
+            border-radius: 30px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid var(--accent);
+            font-size: 0.9rem;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #0a0e14;
+        }
+        .btn-primary:hover {
+            background: #f0b84d;
+            border-color: #f0b84d;
+        }
+        .btn-outline {
+            background: transparent;
+            color: var(--accent);
+        }
+        .btn-outline:hover {
+            background: var(--accent);
+            color: #0a0e14;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+            border-left: 2px solid var(--border);
+            margin: 2rem 0;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.45rem;
+            top: 0.3rem;
+            width: 12px;
+            height: 12px;
+            background: var(--accent);
+            border-radius: 50%;
+            border: 2px solid var(--bg);
+        }
+        .timeline-date {
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+            color: var(--accent);
+            letter-spacing: 0.05em;
+            margin-bottom: 0.2rem;
+        }
+        .timeline-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+            color: #f0f2f5;
+        }
+        .timeline-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            max-width: 600px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.8rem;
+            transition: border-color 0.2s;
+        }
+        .card:hover {
+            border-color: var(--accent-dim);
+        }
+        .card h3 {
+            font-family: var(--font-serif);
+            margin-bottom: 0.6rem;
+        }
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            font-size: 0.85rem;
+        }
+        .data-table th {
+            text-align: left;
+            padding: 0.6rem 1rem;
+            background: var(--surface-light);
+            color: var(--accent);
+            font-family: var(--font-mono);
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid var(--border);
+        }
+        .data-table td {
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+        }
+        .data-table tr:hover td {
+            background: var(--surface);
+        }
+        .badge-green {
+            display: inline-block;
+            padding: 0.15rem 0.6rem;
+            border-radius: 12px;
+            background: #1a3a2a;
+            color: #4ade80;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+        .badge-yellow {
+            display: inline-block;
+            padding: 0.15rem 0.6rem;
+            border-radius: 12px;
+            background: #3a2e1a;
+            color: #facc15;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+        }
+
+        .download-card {
+            background: var(--surface);
+            border: 1px solid var(--accent-dim);
+            border-radius: 12px;
+            padding: 2.5rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .download-card h3 {
+            margin-bottom: 0.6rem;
+        }
+        .download-card .file-info {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .wall-placeholder {
+            background: var(--surface);
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-style: italic;
+            margin: 2rem 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+        footer a {
+            color: var(--text-muted);
+            border-bottom: 1px dotted var(--text-muted);
+        }
+        footer a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        @media (max-width: 640px) {
+            .nav-links {
+                gap: 1rem;
+                font-size: 0.8rem;
+            }
+            .hero {
+                padding: 4rem 0 2rem;
+            }
+            .section {
+                padding: 3rem 0;
+            }
+            .timeline {
+                padding-left: 1.5rem;
+            }
+            .timeline-item::before {
+                left: -1.9rem;
+            }
         }
     </style>
 </head>
-
 <body>
 
+    <nav>
+        <div class="nav-inner">
+            <a href="#home" class="nav-brand">自由王国</a>
+            <ul class="nav-links">
+                <li><a href="#history">建国史</a></li>
+                <li><a href="#system">系统核心</a></li>
+                <li><a href="#roadmap">路线图</a></li>
+                <li><a href="#whitepaper">白皮书</a></li>
+                <li><a href="#spark">火种</a></li>
+                <li><a href="#about">关于</a></li>
+            </ul>
+        </div>
+    </nav>
 
-    <div class="planet">
-        <h1>服务器版本:1.16.5</h1>
-        <h1>插件:是    模组：是</h1>
-        <a href="https://cloud.189.cn/t/f2maiqqYBvQn">客户端链接-访问码:1nic</a>
-        <h1>服务器交流群：636306648（QQ），里面有更详细的进服方法</h1>
-    </div>
-    <div class="planet">
-        <h1>室长:He8896</h1>
-        <a href="https://www.ccw.site/student/5d6f9c73483f201b8034bb60">跳转到CCW主页</a>
-    </div>
-    <div class="planet">
-        <h1>Adam001</h1>
-        <a href="https://www.ccw.site/student/5d200ff11c94e519ab6bdd40">跳转到CCW主页</a>
-    </div>
+    <header class="hero" id="home">
+        <div class="container">
+            <h1>自由王国</h1>
+            <p class="subtitle">一座建在颅腔内的城</p>
+            <blockquote class="epigraph">
+                “事实上，自由王国只是在必要性和外在目的规定要做的劳动终止的地方才开始。”
+                <footer>—— 卡尔·马克思，《资本论》第三卷</footer>
+            </blockquote>
+            <p style="max-width:600px;margin:0 auto 2rem;color:var(--text-muted);">
+                2025年8月18日，一个高中生被班主任公开称为“自由王国”。他没有反驳。他去查了马克思。<br>
+                然后他决定：<strong>接过这个标签，把它变成旗帜。</strong>
+            </p>
+            <div class="hero-buttons">
+                <a href="#whitepaper" class="btn btn-primary">📄 下载白皮书</a>
+                <a href="#history" class="btn btn-outline">📖 了解建国史</a>
+            </div>
+        </div>
+    </header>
+
+    <section class="section" id="history">
+        <div class="container">
+            <h2>📜 建国史：从标签到旗帜</h2>
+            <p style="color:var(--text-muted);">每一次外部冲击，都被转化为系统升级的动力。以下时间线隐去了所有个人信息与具体地名。</p>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">2025.08.18</div>
+                    <div class="timeline-title">事变 · 接过标签</div>
+                    <div class="timeline-desc">因坚持居家未提前返校，被班主任在班级群公开命名为“自由王国”。同日通过搜索引擎查询该词哲学原意——马克思《资本论》。决定：接过标签，建国。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2025.08 – 2026.04</div>
+                    <div class="timeline-title">自由王国 1.0 · 240天运行</div>
+                    <div class="timeline-desc">合法性嵌套、低耦合交往策略成型；EM系统雏形建立；用年级排名证明自主学习效能；守住双休底线。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026.04.16</div>
+                    <div class="timeline-title">事变 · 系统崩溃</div>
+                    <div class="timeline-desc">申请缺席直播课被拒。班主任未查看实验方案。瞬时M值暴跌至2.0，负面情绪持续约3小时。复盘发现五大缺陷：思想准备不足、B计划缺位、心理建设不足、外部关系僵化、合法性缺失。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026.04.17</div>
+                    <div class="timeline-title">自由王国 2.0 · 启动</div>
+                    <div class="timeline-desc">《2.0工程总目标及建设计划》制定。定位“迁都”：将主权从物理空间迁移至颅腔内部。启动联调联试规划。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026.04.26 – 05.16</div>
+                    <div class="timeline-title">联调联试 · 三周实战验证</div>
+                    <div class="timeline-desc">完成心力管理、学习生产、心理建设、环境监测、外部关系、应急响应六大子系统测试。十次任务块均分4.78/5；22:30防线达标率78%；叙事免疫首次实战成功（“灭国论”事件）。</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026.06.09</div>
+                    <div class="timeline-title">验收日</div>
+                    <div class="timeline-desc">2.0完整版书面操作手册交付。系统就绪，迎接高三全面收紧。</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="system">
+        <div class="container">
+            <h2>🧠 系统核心：颅腔内的操作系统</h2>
+            <p style="color:var(--text-muted);">2.0系统由六个子系统集成。以下是经过联调联试验证的核心模块。</p>
+
+            <h3>🔋 EM系统：心力晴雨表</h3>
+            <p>E（精力值）与M（心态稳定度）均采用5分制自评。数据表明：在M稳定条件下，一个标准40分钟任务块消耗约<strong>0.5E</strong>。M波动会额外消耗E。</p>
+            <table class="data-table">
+                <thead>
+                    <tr><th>指标</th><th>描述</th><th>底线标准</th><th>联调联试结果</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>E（精力值）</td><td>主观精力水平，5分为满电</td><td>日均≥3.2</td><td><span class="badge-green">达标</span></td></tr>
+                    <tr><td>M（心态稳定度）</td><td>情绪平稳程度，5分为绝对稳定</td><td>日均≥3.2</td><td><span class="badge-green">达标</span></td></tr>
+                    <tr><td>22:30节点</td><td>晚间延时收尾时的心力状态</td><td>E≥2.5 且 M≥3.5</td><td><span class="badge-green">78%达标</span></td></tr>
+                    <tr><td>任务块效能</td><td>40分钟自主学习的产出评分（1-5）</td><td>≥4.0</td><td><span class="badge-green">均分4.78</span></td></tr>
+                </tbody>
+            </table>
+
+            <h3>🏛️ 首都颅腔论：主权在己不在外</h3>
+            <p>自由王国的首都不在物理空间，而在颅腔内部。外部攻击（嘲讽、否定、标签化）无法触及颅腔内的主权。这一理论在“灭国论”事件中得到首次实战验证——同学嘲讽“自由王国要灭亡了”，回应“首都在颅腔内，你灭不了”，M值无任何波动。</p>
+
+            <h3>📚 学习生产系统</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>标准任务块</h3>
+                    <p>40分钟为一个完整单元。流程：阅读讲解→推导公式→拆解例题→提炼资产→完成练习→错题归因。根据E值动态调整环节。</p>
+                </div>
+                <div class="card">
+                    <h3>订正萃取</h3>
+                    <p>错题不抄写，而是深度加工：还原错误思路→对比正确答案→提炼条件分析与解题思维→补充笔记。2.0系统在深度加工已学内容上有独到优势。</p>
+                </div>
+                <div class="card">
+                    <h3>低功耗巡航</h3>
+                    <p>精力不足时切换至省电模式。内容物清单按E值分级：E≥3.0可群文阅读；E=2.0-2.5仅执行默写、单词书法。22:30后为默认巡航时段。</p>
+                </div>
+                <div class="card">
+                    <h3>授课含金量评估</h3>
+                    <p>每节课后快速评估：可自学替代性 vs 教师独有经验。高含金量课（如大题书写规范）全程高能投入；可替代课降为中等注意力参与。</p>
+                </div>
+            </div>
+
+            <h3>🛡️ 心理建设与应急响应</h3>
+            <p><strong>内部启动仪式</strong>：“系统在。我在。”——在任何场合均可默念，瞬间激活内部主权框架。<br>
+                <strong>叙事免疫机制</strong>：当外部攻击命中时，预设的内部叙事自动中和冲击。攻击被转译为“对旧版本的无效攻击”。<br>
+            <strong>逐级应急响应</strong>：E跌破2.0→5分钟快速充值方案；M跌破3.0持续≥24小时→启动外部干预；极端情况→三线预案（休学条件下的完全自主学习方案）。</p>
+        </div>
+    </section>
+
+    <section class="section" id="roadmap">
+        <div class="container">
+            <h2>🗺️ 路线图：穿过必然王国</h2>
+            <p style="color:var(--text-muted);">给后来者的行动指南。这是一张穿越高压教育体制的路线图，而非一份“考高分秘籍”。</p>
+            <div class="card-grid">
+                <div class="card">
+                    <h3>第一阶段</h3>
+                    <p><strong>识别你的“必然王国”</strong><br>理解所在系统的规则；解码权威的行为算法；区分刚性规则与弹性空间。</p>
+                </div>
+                <div class="card">
+                    <h3>第二阶段</h3>
+                    <p><strong>建立你的EM系统</strong><br>每天给自己的精力和心态打分；找到你的E消耗规律；设计微恢复方案。</p>
+                </div>
+                <div class="card">
+                    <h3>第三阶段</h3>
+                    <p><strong>争取时间主权</strong><br>用成绩或业绩换取空间；合法性嵌套——用权威的话语反制权威；低耦合交往减少摩擦。</p>
+                </div>
+                <div class="card">
+                    <h3>第四阶段</h3>
+                    <p><strong>建设内心首都</strong><br>设计你的内部启动仪式；建立叙事免疫——让自己拥有解释权；B计划永远在线。</p>
+                </div>
+                <div class="card">
+                    <h3>第五阶段</h3>
+                    <p><strong>稳定运行与迭代</strong><br>数据驱动优化；每次挫折都是系统升级的契机；不追求完美，追求可预测的稳定。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="whitepaper">
+        <div class="container">
+            <h2>📄 白皮书</h2>
+            <p>《自由王国 2.0 系统操作手册》——完整书面版。已隐去全部个人信息、校名、地名。免费公开，遵循 CC BY-NC-SA 许可协议。</p>
+            <div class="download-card">
+                <h3>📕 自由王国 2.0 系统操作手册</h3>
+                <p class="file-info">PDF · 约XX页 · 预计高考后发布</p>
+                <p style="color:var(--text-muted);font-size:0.85rem;">手册包含：系统总纲、心力管理子系统、学习生产子系统、心理建设子系统、外部环境管理子系统、应急响应子系统、附录（联调联试数据汇总、常见问题FAQ等）。</p>
+                <a href="#" class="btn btn-primary" style="margin-top:1rem;" onclick="alert('白皮书将在高考结束后上传。感谢关注。');return false;">📥 下载白皮书（即将上线）</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="spark">
+        <div class="container">
+            <h2>🔥 火种墙</h2>
+            <p>“只要有一个人看懂并且接过了‘自由王国’的火种，那我就是赚到了。”<br>—— 自由王国建国者</p>
+            <div class="wall-placeholder">
+                <p>🔥 火种传递区 · 即将开放</p>
+                <p style="font-size:0.8rem;">如果你也建起了自己的“自由王国”，请在这里留下一句话。匿名、化名均可。不留存任何可定位到具体个人的信息。</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="about">
+        <div class="container">
+            <h2>🏴 关于这座王国</h2>
+            <blockquote>
+                “他不求名声，不求流量，不求任何回报。他只希望——如果未来有人走过同样的路，这张路线图能陪他一程。”
+            </blockquote>
+            <p>这座网站的作者，是一个曾在中国某县中就读的学生。他在高二升高三的关口，因坚持自主学习的节奏，被权威公开赋予了一个贬义的标签。他没有选择对抗，也没有选择顺从。他选择了<strong>建设</strong>。</p>
+            <p>他在颅腔内建起了一座自由王国，并在这里度过了高三。高考结束后，他将自己的系统整理成白皮书，隐去全部个人信息，免费公开。</p>
+            <p><strong>这不是一个“高三学习方法分享站”。这是一份“在必然王国中建立内心主权”的系统工程档案。</strong></p>
+            <p style="margin-top:2rem;color:var(--text-muted);font-size:0.85rem;">联系：火种墙留言（网站唯一交互渠道）</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>自由王国 © 2026 · 一座建在颅腔内的城</p>
+            <p style="margin-top:0.5rem;">本网站内容遵循 <a href="#">CC BY-NC-SA 4.0</a> 许可协议 · 无追踪 · 无广告 · 纯静态</p>
+            <p style="margin-top:0.3rem;font-family:var(--font-serif);color:var(--accent-dim);">“系统在。我在。”</p>
+        </div>
+    </footer>
 
 </body>
+</html>
